@@ -86,7 +86,7 @@ function AtImport(options) {
       opts,
       state,
       null,
-      createProcessor(result, options.plugins)
+      createProcessor(options.plugins)
     )
 
     function onParseEnd() {
@@ -105,7 +105,7 @@ function AtImport(options) {
   }
 }
 
-function createProcessor(result, plugins) {
+function createProcessor(plugins) {
   if (plugins) {
     if (!Array.isArray(plugins)) {
       throw new Error("plugins option must be an array")
@@ -390,7 +390,7 @@ function readImportedContent(
 
   if (options.async) {
     return parsedResult.then(function() {
-      return processor.process(newStyles)
+      return processor.process(newStyles, options.processOptions)
         .then(function(newResult) {
           result.messages = result.messages.concat(newResult.messages)
         })
@@ -400,7 +400,7 @@ function readImportedContent(
     })
   }
   // else (!options.async)
-  var newResult = processor.process(newStyles)
+  var newResult = processor.process(newStyles, options.processOptions)
   result.messages = result.messages.concat(newResult.messages)
   insertRules(atRule, parsedAtImport, newStyles)
 }
